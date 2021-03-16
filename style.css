@@ -106,7 +106,7 @@ main{
 div.card{
     background-color: #dbd1be77;
     box-shadow: 0 0 2px 0;
-    transition: box-shadow .4s, transform .5s;
+    transition: box-shadow .4s, transform .3s linear;
     font-size: 1.2vw;
     padding: 1vw;
 }
