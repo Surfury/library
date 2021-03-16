@@ -54,9 +54,10 @@ class Book {
 function deleteBook(E) {
   library = library.filter(Ele => Ele.title !== E.parentElement.firstElementChild.nextElementSibling.textContent);
   /* wait to complete the transition */
-  E.parentElement.classList.add('hidden')
-  setTimeout(() => E.parentElement.remove(), 490);
-  updateBooks();
+  E.parentElement.classList.add('hidden');
+  setTimeout(() => {
+    updateBooks();
+  },390);
 }
 const numberOnly = e => {
   if (!e.key.match(/\d/)) {
