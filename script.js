@@ -1,5 +1,11 @@
 const eleID = ID => document.getElementById(ID);
 let library = [];
+/* create nodes and append them */
+const newNode = (HTMLTag = 'div', parent = eleID('books')) => {
+  let node = document.createElement(HTMLTag);
+  parent.appendChild(node);
+  return node;
+}
 window.addEventListener('load', () => {
   eleID('spinner').remove();
   eleID('cover').classList.add('hidden');
@@ -20,21 +26,39 @@ const addNewBook = (title, author, pages, isRead) => {
 const updateBooks = () => {
   eleID('books').innerHTML = '';
   library.forEach(E => {
-    eleID('books').innerHTML += `<div class='card'>
-  <button>x</button>
-  <p title='Title'>${E.title}</p>
-      <hr>
-      <p title='Author'>${E.author}</p>
-      <hr>
-      <p title='Number of Pages'>${E.pages}</p>
-      <hr>
-      <label class='check'>Is Read?
-      <input type='checkbox' ${E.isRead} disabled>
-      </label>
-  </div>`;
-  });
-  document.querySelectorAll('div.card > button').forEach(E => {
-    E.addEventListener('click', (e) => deleteBook(e.target));
+    let card = newNode();
+    card.classList.add('card');
+
+    let removeButton = newNode('button',card);
+    removeButton.textContent='x';
+    removeButton.addEventListener('click', (e) => deleteBook(e.target));
+
+    let titleParagraph = newNode('p',card);
+    titleParagraph.title='Title';
+    titleParagraph.textContent=E.title;
+
+    newNode('hr',card);
+
+    let pages = newNode('p',card);
+    pages.title='Number of Pages';
+    pages.textContent=E.pages;
+    
+    newNode('hr',card);
+
+    let author = newNode('p',card);
+    author.title='Author';
+    author.textContent=E.author;
+
+    newNode('hr',card);
+
+    let label = newNode('label',card);
+    label.classList.add('check');
+    label.textContent='Is Read?';
+
+    let checkbox = newNode('input',label);
+    checkbox.type='checkbox';
+    checkbox.textContent=E.isRead;
+    checkbox.disabled='disabled';
   });
   localStorage.clear();
   if (library.length > 0) localStorage.setItem('library', JSON.stringify(library));
@@ -78,7 +102,6 @@ const showCover = () => {
 eleID('pages').addEventListener('keypress', (e) => numberOnly(e));
 
 eleID('add').addEventListener('click', showCover);
-
 /* create a new book and send it to render it */
 eleID('addNewBook').addEventListener('click', () => {
   let Read = '';
@@ -109,7 +132,5 @@ document.querySelectorAll('input[type="text"]').forEach(E => {
 /* Display saved books */
 if (localStorage.getItem('library') !== null) {
   library = JSON.parse(localStorage.getItem('library'));
-  for (let i = library.length - 1; i >= 0; i--) {
-    addNewBook(library[i].title, library[i].author, library[i].pages, library[i].isRead);
-  }
+  updateBooks();
 }
